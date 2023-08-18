@@ -10,11 +10,12 @@ Description: Meta-analyses can be compromised by studies' internal biases (e.g.,
   (2) For a given severity of publication bias, how severe would internal bias
   have to be, hypothetically, to attenuate the results to the null or by a given
   amount?
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
-  person("Mika", "Braginsky", email = "mika.br@gmail.com", role = c("aut", "cre")),
-  person("Maya", "Mathur", email = "mmathur@stanford.edu", role = c("aut")))
-Maintainer: Mika Braginsky <mika.br@gmail.com>
+  person("Peter", "Solymos", email = "peter@analythium.io", role = c("cre", "ctb"), comment = c(ORCID = "0000-0001-7337-1740")),
+  person("Maya", "Mathur", email = "mmathur@stanford.edu", role = c("aut")),
+  person("Mika", "Braginsky", email = "mika.br@gmail.com", role = c("aut"))
+  )
 License: MIT + file LICENSE
 URL: https://github.com/mathurlabstanford/multibiasmeta,
         https://mathurlabstanford.github.io/multibiasmeta/
@@ -31,8 +32,10 @@ Suggests: glue, knitr, phacking, PublicationBias (>= 2.3.0), rmarkdown,
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2023-02-07 17:32:20 UTC; mbraginsky
-Author: Mika Braginsky [aut, cre],
-  Maya Mathur [aut]
+Packaged: 2023-08-18 16:59:09 UTC; root
+Author: Peter Solymos [cre, ctb] (<https://orcid.org/0000-0001-7337-1740>),
+  Maya Mathur [aut],
+  Mika Braginsky [aut]
+Maintainer: Peter Solymos <peter@analythium.io>
 Repository: CRAN
-Date/Publication: 2023-02-08 09:40:02 UTC
+Date/Publication: 2023-08-18 18:32:32 UTC

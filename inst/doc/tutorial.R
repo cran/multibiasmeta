@@ -7,7 +7,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.width = 6,
   fig.height = 3,
-  fig.dpi = 300
+  fig.dpi = 300,
+  eval = requireNamespace("phacking") && requireNamespace("PublicationBias")
 )
 
 # round printed numbers to 2 digits without changing options()

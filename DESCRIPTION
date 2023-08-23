@@ -10,7 +10,7 @@ Description: Meta-analyses can be compromised by studies' internal biases (e.g.,
   (2) For a given severity of publication bias, how severe would internal bias
   have to be, hypothetically, to attenuate the results to the null or by a given
   amount?
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
   person("Maya", "Mathur", email = "mmathur@stanford.edu", role = c("aut")),
   person("Mika", "Braginsky", email = "mika.br@gmail.com", role = c("aut")),
@@ -32,10 +32,10 @@ Suggests: glue, knitr, phacking, PublicationBias (>= 2.3.0), rmarkdown,
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2023-08-19 15:15:27 UTC; root
+Packaged: 2023-08-21 16:57:50 UTC; root
 Author: Maya Mathur [aut],
   Mika Braginsky [aut],
   Peter Solymos [cre, ctb] (<https://orcid.org/0000-0001-7337-1740>)
 Maintainer: Peter Solymos <peter@analythium.io>
 Repository: CRAN
-Date/Publication: 2023-08-21 09:22:36 UTC
+Date/Publication: 2023-08-23 13:50:02 UTC

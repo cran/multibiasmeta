@@ -1,4 +1,5 @@
 ## ---- include = FALSE---------------------------------------------------------
+suggest_ok <- requireNamespace("phacking") && requireNamespace("PublicationBias")
 knitr::opts_chunk$set(
   error = FALSE,
   warning = FALSE,
@@ -8,7 +9,7 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.height = 3,
   fig.dpi = 300,
-  eval = requireNamespace("phacking") && requireNamespace("PublicationBias")
+  eval = suggest_ok
 )
 
 # round printed numbers to 2 digits without changing options()
@@ -46,133 +47,151 @@ ref <- function(key, mode = "p") {
   else if (mode == "p") glue::glue("[{r[1]}, {r[2]}]({r[3]})") # [author (year)](link)
 }
 
+# when PublicationBias or phacking are missing
+# we use dummy versions of these model objects
+# that are reference in the text, i.e. it is not enought
+# to make eval=FALSE for the code chunks
+if (!suggest_ok) {
+  sr <- 4
+  multi_meat_0 <- pubbias_meat_4 <- list(stats=list(estimate=NA, ci_lower=NA, ci_upper=NA))
+  qs <- 0.1
+  svalue_meat_01 <- list(stats=list(sval_ci=NA))
+  phacking_meat <- list(stats=list(mode=list(NA, NA)))
+  evalue_meat <- evalue_meat_conf <- list(stats=list(bias_est=NA,bias_ci=NA))
+}
+
 ## ----setup--------------------------------------------------------------------
-library(PublicationBias)
-library(phacking)
-library(multibiasmeta)
+#  library(PublicationBias)
+#  library(phacking)
+#  library(multibiasmeta)
+
+## ----setup2,eval=!suggest_ok,echo=FALSE---------------------------------------
+# this message is shown when PublicationBias or phacking are missing
+message("NOTE: Suggested packages PublicationBias or phacking are not installed")
+message("Please install these packages and run the code from this tutorial")
 
 ## ----meta_meat----------------------------------------------------------------
-meta_meat
+#  meta_meat
 
 ## ----rma----------------------------------------------------------------------
-metafor::rma(yi, vi, data = meta_meat, method = "FE")
+#  metafor::rma(yi, vi, data = meta_meat, method = "FE")
 
 ## ----robu---------------------------------------------------------------------
-robumeta::robu(yi ~ 1, data = meta_meat, studynum = cluster, var.eff.size = vi)
+#  robumeta::robu(yi ~ 1, data = meta_meat, studynum = cluster, var.eff.size = vi)
 
 ## ----pubbias_meat_1-----------------------------------------------------------
-pubbias_meat_1 <- pubbias_meta(meta_meat$yi,
-                               meta_meat$vi,
-                               model_type = "fixed",
-                               selection_ratio = 1)
-pubbias_meat_1$stats
+#  pubbias_meat_1 <- pubbias_meta(meta_meat$yi,
+#                                 meta_meat$vi,
+#                                 model_type = "fixed",
+#                                 selection_ratio = 1)
+#  pubbias_meat_1$stats
 
 ## ----sr, echo=FALSE-----------------------------------------------------------
-sr <- 4
+#  sr <- 4
 
 ## ----pubbias_meat_4-----------------------------------------------------------
-pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
-                               meta_meat$vi,
-                               model_type = "fixed",
-                               selection_ratio = sr)
-pubbias_meat_4$stats
+#  pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
+#                                 meta_meat$vi,
+#                                 model_type = "fixed",
+#                                 selection_ratio = sr)
+#  pubbias_meat_4$stats
 
 ## ----pubbias_meat_4_robust----------------------------------------------------
-pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
-                               meta_meat$vi,
-                               cluster = meta_meat$cluster,
-                               selection_ratio = 4)
-pubbias_meat_4$stats
+#  pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
+#                                 meta_meat$vi,
+#                                 cluster = meta_meat$cluster,
+#                                 selection_ratio = 4)
+#  pubbias_meat_4$stats
 
 ## ----pubbias_meat_4_worst-----------------------------------------------------
-pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
-                               meta_meat$vi,
-                               cluster = meta_meat$cluster,
-                               selection_ratio = 4,
-                               return_worst_meta = TRUE)
-
-pubbias_meat_4$stats
+#  pubbias_meat_4 <- pubbias_meta(meta_meat$yi,
+#                                 meta_meat$vi,
+#                                 cluster = meta_meat$cluster,
+#                                 selection_ratio = 4,
+#                                 return_worst_meta = TRUE)
+#  
+#  pubbias_meat_4$stats
 
 ## ----svalue_meat_0------------------------------------------------------------
-svalue_meat_0 <- pubbias_svalue(meta_meat$yi,
-                                meta_meat$vi,
-                                cluster = meta_meat$cluster)
-svalue_meat_0$stats
+#  svalue_meat_0 <- pubbias_svalue(meta_meat$yi,
+#                                  meta_meat$vi,
+#                                  cluster = meta_meat$cluster)
+#  svalue_meat_0$stats
 
 ## ----qs, echo=FALSE-----------------------------------------------------------
-qs <- 0.1
+#  qs <- 0.1
 
 ## ----svalue_meat_01-----------------------------------------------------------
-svalue_meat_01 <- pubbias_svalue(meta_meat$yi,
-                                 meta_meat$vi,
-                                 cluster = meta_meat$cluster,
-                                 q = 0.1)
-svalue_meat_01$stats
+#  svalue_meat_01 <- pubbias_svalue(meta_meat$yi,
+#                                   meta_meat$vi,
+#                                   cluster = meta_meat$cluster,
+#                                   q = 0.1)
+#  svalue_meat_01$stats
 
 ## ----significance_funnel, fig.height = 4--------------------------------------
-significance_funnel(yi = meta_meat$yi, vi = meta_meat$vi)
+#  significance_funnel(yi = meta_meat$yi, vi = meta_meat$vi)
 
 ## ----phacking_meat------------------------------------------------------------
-phacking_meat <- phacking_meta(yi = meta_meat$yi, vi = meta_meat$vi, parallelize = FALSE)
-
-phacking_meat$stats
+#  phacking_meat <- phacking_meta(yi = meta_meat$yi, vi = meta_meat$vi, parallelize = FALSE)
+#  
+#  phacking_meat$stats
 
 ## ----tcrit, include = FALSE---------------------------------------------------
-# temporary workaround for bug in released version of phacking
-phacking_meat$values$tcrit <- qnorm(0.975)
+#  # temporary workaround for bug in released version of phacking
+#  phacking_meat$values$tcrit <- qnorm(0.975)
 
 ## ----rtma_qqplot, fig.width = 3-----------------------------------------------
-rtma_qqplot(phacking_meat)
+#  rtma_qqplot(phacking_meat)
 
 ## ----z_density----------------------------------------------------------------
-z_density(yi = meta_meat$yi, vi = meta_meat$vi)
+#  z_density(yi = meta_meat$yi, vi = meta_meat$vi)
 
 ## ----multi_meat_0-------------------------------------------------------------
-multi_meat_0 <- multibias_meta(yi = meta_meat$yi,
-                               vi = meta_meat$vi,
-                               selection_ratio = 4,
-                               bias_affirmative = 0,
-                               bias_nonaffirmative = 0)
-multi_meat_0$stats
+#  multi_meat_0 <- multibias_meta(yi = meta_meat$yi,
+#                                 vi = meta_meat$vi,
+#                                 selection_ratio = 4,
+#                                 bias_affirmative = 0,
+#                                 bias_nonaffirmative = 0)
+#  multi_meat_0$stats
 
 ## ----multi_meat_1-------------------------------------------------------------
-multi_meat_1 <- multibias_meta(yi = meta_meat$yi,
-                               vi = meta_meat$vi,
-                               biased = !meta_meat$randomized,
-                               selection_ratio = 4,
-                               bias_affirmative = log(1.5),
-                               bias_nonaffirmative = log(1.1))
-multi_meat_1$stats
+#  multi_meat_1 <- multibias_meta(yi = meta_meat$yi,
+#                                 vi = meta_meat$vi,
+#                                 biased = !meta_meat$randomized,
+#                                 selection_ratio = 4,
+#                                 bias_affirmative = log(1.5),
+#                                 bias_nonaffirmative = log(1.1))
+#  multi_meat_1$stats
 
 ## ----multi_meat_1_all---------------------------------------------------------
-multi_meat_1 <- multibias_meta(yi = meta_meat$yi,
-                               vi = meta_meat$vi,
-                               biased = TRUE,
-                               selection_ratio = 4,
-                               bias_affirmative = log(1.5),
-                               bias_nonaffirmative = log(1.1))
-multi_meat_1$stats
+#  multi_meat_1 <- multibias_meta(yi = meta_meat$yi,
+#                                 vi = meta_meat$vi,
+#                                 biased = TRUE,
+#                                 selection_ratio = 4,
+#                                 bias_affirmative = log(1.5),
+#                                 bias_nonaffirmative = log(1.1))
+#  multi_meat_1$stats
 
 ## ----evalue_meat--------------------------------------------------------------
-evalue_meat <- multibias_evalue(yi = meta_meat$yi,
-                                vi = meta_meat$vi,
-                                biased = !meta_meat$randomized,
-                                selection_ratio = 4)
-evalue_meat$stats
+#  evalue_meat <- multibias_evalue(yi = meta_meat$yi,
+#                                  vi = meta_meat$vi,
+#                                  biased = !meta_meat$randomized,
+#                                  selection_ratio = 4)
+#  evalue_meat$stats
 
 ## ----evalue_meat_01-----------------------------------------------------------
-evalue_meat_01 <- multibias_evalue(yi = meta_meat$yi,
-                                   vi = meta_meat$vi,
-                                   biased = !meta_meat$randomized,
-                                   selection_ratio = 4,
-                                   q = 0.1)
-evalue_meat_01$stats
+#  evalue_meat_01 <- multibias_evalue(yi = meta_meat$yi,
+#                                     vi = meta_meat$vi,
+#                                     biased = !meta_meat$randomized,
+#                                     selection_ratio = 4,
+#                                     q = 0.1)
+#  evalue_meat_01$stats
 
 ## ----evalue_meat_conf---------------------------------------------------------
-evalue_meat_conf <- multibias_evalue(yi = meta_meat$yi,
-                                     vi = meta_meat$vi,
-                                     biased = !meta_meat$randomized,
-                                     selection_ratio = 4,
-                                     assumed_bias_type = list(EValue::confounding()))
-evalue_meat_conf$stats
+#  evalue_meat_conf <- multibias_evalue(yi = meta_meat$yi,
+#                                       vi = meta_meat$vi,
+#                                       biased = !meta_meat$randomized,
+#                                       selection_ratio = 4,
+#                                       assumed_bias_type = list(EValue::confounding()))
+#  evalue_meat_conf$stats
 
